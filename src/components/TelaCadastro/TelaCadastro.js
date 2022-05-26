@@ -7,9 +7,9 @@ import Logo from '../../Images/Logo-TrackIT.png'
 
 export default function TelaCadastro() {
 
-    // const URL = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/sign-up";
+    const URL = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/sign-up";
 
-    // const promise = axios.post(URL, Dados);
+    const promise = axios.post(URL, Dados);
 
 
 
@@ -34,7 +34,7 @@ export default function TelaCadastro() {
 
 const Container = styled.div`
     
-    width: 100vh;
+    width: 100%;
     height: 100vh;
 
     display: flex;
