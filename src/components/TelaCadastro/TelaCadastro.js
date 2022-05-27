@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom"
 import axios from "axios"
-import { useState } from "react"
+import { useState} from "react"
 
 import styled from 'styled-components'
 import Logo from '../../Images/Logo-TrackIT.png'
@@ -9,6 +9,7 @@ import { useUserLogged } from '../../context/UserLoggedProvider';
 
 export default function TelaCadastro() {
 
+    const [loading, setLoading] = useState(false);
     const [formContent, setFormContent] = useState({
         email: '',
         password: '',
@@ -28,6 +29,8 @@ export default function TelaCadastro() {
 
         const promise = axios.post(URL, formContent);
 
+        setLoading(true);
+
         promise.then(() => {
             alert('Parabens seu cadastro deu certo! clique em fazer login com os dados informados.');
             setFormContent({
@@ -36,6 +39,7 @@ export default function TelaCadastro() {
                 name: '',
                 image: ''
             })
+            setLoading(false)
             navigate("/");
         });
 
@@ -50,11 +54,11 @@ export default function TelaCadastro() {
         <ContainerCadastro>
             <img src={Logo} alt='Logo TrackIT' />
             <form onSubmit={handleSubmit}>
-                <input placeholder='Email' value={formContent.email} type='email' onChange={(e) => setFormContent((state) => ({ ...state, email: e.target.value }))} />
-                <input placeholder='Senha' value={formContent.senha} type='password' onChange={(e) => setFormContent((state) => ({ ...state, password: e.target.value }))} />
-                <input placeholder='Nome' value={formContent.nome} type='text' onChange={(e) => setFormContent((state) => ({ ...state, name: e.target.value }))} />
-                <input placeholder='Foto' value={formContent.foto} type='url' onChange={(e) => setFormContent((state) => ({ ...state, image: e.target.value }))} />
-                <button>Cadastrar</button>
+                <input placeholder='Email' disabled={loading} value={formContent.email} type='email' onChange={(e) => setFormContent((state) => ({ ...state, email: e.target.value }))} />
+                <input placeholder='Senha' disabled={loading} value={formContent.senha} type='password' onChange={(e) => setFormContent((state) => ({ ...state, password: e.target.value }))} />
+                <input placeholder='Nome' disabled={loading} value={formContent.nome} type='text' onChange={(e) => setFormContent((state) => ({ ...state, name: e.target.value }))} />
+                <input placeholder='Foto' disabled={loading} value={formContent.foto} type='url' onChange={(e) => setFormContent((state) => ({ ...state, image: e.target.value }))} />
+                <button disabled={loading} >Cadastrar</button>
             </form>
 
             <Link to="/">
