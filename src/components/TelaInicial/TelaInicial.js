@@ -1,19 +1,56 @@
+import axios from 'axios';
+import { Link, Navigate, useNavigate } from "react-router-dom"
+import { useState } from 'react';
+
 import styled from 'styled-components'
 import Logo from '../../Images/Logo-TrackIT.png'
-
-import { Link } from "react-router-dom"
+import { useUserLogged } from '../../context/UserLoggedProvider';
 
 export default function TelaInicial() {
 
-    
+    const URL = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/login";
+
+    const [email, setEmail] = useState();
+    const [senha, setSenha] = useState();
+    const [loading, setLoading] = useState(false);
+    const {saveDataUserLogged} = useUserLogged();
+    const navigate = useNavigate();
+
+    function handleSubmit(event) {
+        event.preventDefault();
+
+        const dados = {
+            email: email,
+            password: senha
+        }
+
+        const promise = axios.post(URL, dados);
+
+        setLoading(true);
+
+        promise.then((response) => {
+            saveDataUserLogged(response.data);
+            console.log('Parabens encontrei o seu login, e deu tudo certo por enquanto.')
+            setLoading(false);
+            navigate("/habitos");
+                     
+        })
+        promise.catch((error) => {
+            console.log(error)
+            alert('Usuário o senha digitados incorretamente, tentar novamente');
+        })
+
+    }
 
     return (
 
         <Container>
             <img src={Logo} alt='Logo TrackIT' />
-            <input placeholder='Email' type='email' />
-            <input placeholder='Senha' type='password' />
-            <button>Entrar</button>
+            <form onSubmit={handleSubmit}>
+                <input placeholder='Email' type='email' onChange={(e) => setEmail(e.target.value)} disabled={loading}/>
+                <input placeholder='Senha' type='password' onChange={(e) => setSenha(e.target.value)} disabled={loading}/>
+                <button disabled={loading}>Entrar</button>
+            </form>
 
             <Link to="/cadastro">
                 <h3>Não tem uma conta? Cadastre-se agora!</h3>
@@ -33,10 +70,11 @@ const Container = styled.div`
     flex-direction: column;
     justify-content : center;
     align-items: center;
-    
+
     img {
         width: 300px;
         height: 220px;
+        
     }
 
     input {
@@ -47,6 +85,8 @@ const Container = styled.div`
         border: thin solid lightgray;
         border-radius: 5px;
         padding: 10px;
+
+        margin-left: 10%;
         
     }
 
@@ -58,6 +98,8 @@ const Container = styled.div`
         border: thin solid #52B6FF;
         color: white;
         margin-bottom: 20px;
+
+        margin-left: 10%;
 
         font-size: 20px;
         font-family: 'Lexend Deca';

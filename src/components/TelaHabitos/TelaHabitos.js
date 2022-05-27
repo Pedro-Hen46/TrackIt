@@ -1,6 +1,11 @@
+import { useUserLogged } from "../../context/UserLoggedProvider"
 
 
-export default function TelaHabitos(){
+export default function TelaHabitos() {
 
-    return (<h1> PAo com batata</h1>)
+    const { token } = useUserLogged();
+
+    return (
+        <h1> {token}</h1>
+    )
 }

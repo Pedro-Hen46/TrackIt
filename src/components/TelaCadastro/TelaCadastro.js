@@ -1,38 +1,71 @@
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import axios from "axios"
 import { useState } from "react"
 
 import styled from 'styled-components'
 import Logo from '../../Images/Logo-TrackIT.png'
+import { useUserLogged } from '../../context/UserLoggedProvider';
+
 
 export default function TelaCadastro() {
 
+    const [formContent, setFormContent] = useState({
+        email: '',
+        password: '',
+        name: '',
+        image: ''
+    });
+
+    const provideData = useUserLogged();
+    console.log(provideData)
+
+    const navigate = useNavigate();
+
     const URL = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/sign-up";
 
-    const promise = axios.post(URL, Dados);
+    function handleSubmit(event) {
+        event.preventDefault();
 
+        const promise = axios.post(URL, formContent);
 
+        promise.then(() => {
+            alert('Parabens seu cadastro deu certo! clique em fazer login com os dados informados.');
+            setFormContent({
+                email: '',
+                password: '',
+                name: '',
+                image: ''
+            })
+            navigate("/");
+        });
+
+        promise.catch((error) => {
+            alert('Não consegui finalizar o seu cadastro, por favor tente novamente.');
+        })
+
+    }
 
     return (
 
-        <Container>
+        <ContainerCadastro>
             <img src={Logo} alt='Logo TrackIT' />
-            <input placeholder='Email' type='email' />
-            <input placeholder='Senha' type='password' />
-            <input placeholder='Nome' type='text' />
-            <input placeholder='Foto' type='url' />
-            <button>Cadastrar</button>
+            <form onSubmit={handleSubmit}>
+                <input placeholder='Email' value={formContent.email} type='email' onChange={(e) => setFormContent((state) => ({ ...state, email: e.target.value }))} />
+                <input placeholder='Senha' value={formContent.senha} type='password' onChange={(e) => setFormContent((state) => ({ ...state, password: e.target.value }))} />
+                <input placeholder='Nome' value={formContent.nome} type='text' onChange={(e) => setFormContent((state) => ({ ...state, name: e.target.value }))} />
+                <input placeholder='Foto' value={formContent.foto} type='url' onChange={(e) => setFormContent((state) => ({ ...state, image: e.target.value }))} />
+                <button>Cadastrar</button>
+            </form>
 
             <Link to="/">
                 <h3>Já tem uma conta? Faça login!</h3>
             </Link>
-        </Container>
-
+        </ContainerCadastro>
 
     )
 }
 
-const Container = styled.div`
+const ContainerCadastro = styled.div`
     
     width: 100%;
     height: 100vh;
@@ -52,6 +85,8 @@ const Container = styled.div`
         height: 40px;
         margin-bottom: 10px;
 
+        margin-left: 10%;
+
         border: thin solid lightgray;
         border-radius: 5px;
         padding: 10px;
@@ -66,6 +101,7 @@ const Container = styled.div`
         border: thin solid #52B6FF;
         color: white;
         margin-bottom: 20px;
+        margin-left: 10%;
 
         font-size: 20px;
         font-family: 'Lexend Deca';
