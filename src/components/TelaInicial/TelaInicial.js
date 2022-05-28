@@ -33,7 +33,7 @@ export default function TelaInicial() {
 
     promise.then((response) => {
       saveDataUserLogged(response.data);
-      navigate("/habitos");
+      navigate("/hoje");
     });
     promise.catch((error) => {
       alert("Usuário o senha digitados incorretamente, tentar novamente");

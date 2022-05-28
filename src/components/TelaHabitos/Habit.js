@@ -27,6 +27,8 @@ export default function Habit({ habit, id }) {
   };
 
   function DeleteHabitFromAPI() {
+    const decision = window.confirm("Tem certeza que deseja excluir este Habito?");
+    if (decision){
     const promise = axios.delete(
       `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}`,
       config
@@ -41,6 +43,8 @@ export default function Habit({ habit, id }) {
     });
 
     promise.finally(() => setLoading(false));
+  }
+  console.log("Nao vou apagar meu brother")
   }
 
   return (

@@ -5,6 +5,4 @@ import "./assets/css/styles.css"
 
 import App from './components/App';
 
-
-
 reactDom.render(<App />, document.querySelector('.root'));

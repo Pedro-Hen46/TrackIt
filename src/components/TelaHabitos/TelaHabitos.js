@@ -1,11 +1,12 @@
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
+import { useUserLogged } from "../../context/UserLoggedProvider";
 
 import { Header } from "../Header";
 import { Footer } from "../Footer";
 import { ButtonDay } from "../ButtonDay";
-import { useEffect, useState } from "react";
-import { useUserLogged } from "../../context/UserLoggedProvider";
+import { ThreeDots } from "react-loader-spinner";
 import Habit from "./Habit";
 
 export default function TelaHabitos() {
@@ -28,6 +29,7 @@ export default function TelaHabitos() {
   ]);
 
   const [addHabit, setAddHabit] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [inputHabit, setInputHabit] = useState("");
   const [responseHabits, setResponseHabits] = useState([]);
 
@@ -45,11 +47,14 @@ export default function TelaHabitos() {
 
   //PEGANDO HABITOS QUE ESTAO NA API
   useEffect(() => {
+    setLoading(true);
     const promise = axios.get(
       "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits",
       config
     );
     promise.then((response) => setResponseHabits(response.data));
+
+    promise.finally(() => setLoading(false));
   }, []);
 
   //MANDANDO NOVOS HABITOS PARA A API
@@ -81,7 +86,6 @@ export default function TelaHabitos() {
 
     promise.catch((error) => console.log(error));
   }
-
 
   return (
     <Container>
@@ -115,8 +119,11 @@ export default function TelaHabitos() {
         ) : (
           ""
         )}
-
-        {responseHabits.length === 0 ? (
+        {loading ? (
+          <LoadingIcon>
+            <ThreeDots color="darkgray" height={300} width={300} />
+          </LoadingIcon>
+        ) : responseHabits.length === 0 ? (
           <span>
             Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para
             começar a trackear!
@@ -125,14 +132,18 @@ export default function TelaHabitos() {
           ""
         )}
 
-        {responseHabits.map((habit, index) =>
-          <Habit habit={habit} key={index} id={habit.id}/>
-        )}
+        {responseHabits.map((habit, index) => (
+          <Habit habit={habit} key={index} id={habit.id} />
+        ))}
       </Contents>
       <Footer />
     </Container>
   );
 }
+const LoadingIcon = styled.div`
+  display: flex;
+  justify-content: center;
+`;
 
 const Buttons = styled.div`
   display: flex;

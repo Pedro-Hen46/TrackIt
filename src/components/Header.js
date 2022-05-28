@@ -42,5 +42,6 @@ const HeaderContainer = styled.div`
 
         border-radius: 50%;
         object-fit: cover;
+        box-shadow: 0px 0px 10px rgba(0,0,0, 0.6);
     }
 `
