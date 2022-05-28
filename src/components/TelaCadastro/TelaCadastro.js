@@ -5,6 +5,7 @@ import { useState} from "react"
 import styled from 'styled-components'
 import Logo from '../../Images/Logo-TrackIT.png'
 import { useUserLogged } from '../../context/UserLoggedProvider';
+import { Bars } from 'react-loader-spinner'
 
 
 export default function TelaCadastro() {
@@ -45,6 +46,7 @@ export default function TelaCadastro() {
 
         promise.catch((error) => {
             alert('Não consegui finalizar o seu cadastro, por favor tente novamente.');
+            setLoading(false)
         })
 
     }
@@ -58,7 +60,8 @@ export default function TelaCadastro() {
                 <input placeholder='Senha' disabled={loading} value={formContent.senha} type='password' onChange={(e) => setFormContent((state) => ({ ...state, password: e.target.value }))} />
                 <input placeholder='Nome' disabled={loading} value={formContent.nome} type='text' onChange={(e) => setFormContent((state) => ({ ...state, name: e.target.value }))} />
                 <input placeholder='Foto' disabled={loading} value={formContent.foto} type='url' onChange={(e) => setFormContent((state) => ({ ...state, image: e.target.value }))} />
-                <button disabled={loading} >Cadastrar</button>
+                <button disabled={loading} > {loading ? <Bars color="#FFFFFF" height={24} width={24} />
+                    : 'Cadastrar'} </button>
             </form>
 
             <Link to="/">
@@ -106,6 +109,9 @@ const ContainerCadastro = styled.div`
         color: white;
         margin-bottom: 20px;
         margin-left: 10%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
 
         font-size: 20px;
         font-family: 'Lexend Deca';

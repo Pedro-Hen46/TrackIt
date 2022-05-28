@@ -1,20 +1,23 @@
 import axios from 'axios';
-import { Link, Navigate, useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { useState } from 'react';
 
 import styled from 'styled-components'
 import Logo from '../../Images/Logo-TrackIT.png'
 import { useUserLogged } from '../../context/UserLoggedProvider';
 
-export default function TelaInicial() {
+import { Bars } from 'react-loader-spinner'
 
-    const URL = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/login";
+export default function TelaInicial() {
 
     const [email, setEmail] = useState();
     const [senha, setSenha] = useState();
     const [loading, setLoading] = useState(false);
-    const {saveDataUserLogged} = useUserLogged();
+
+    const { saveDataUserLogged } = useUserLogged();
     const navigate = useNavigate();
+
+    const URL = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/login";
 
     function handleSubmit(event) {
         event.preventDefault();
@@ -33,7 +36,7 @@ export default function TelaInicial() {
             console.log('Parabens encontrei o seu login, e deu tudo certo por enquanto.')
             setLoading(false);
             navigate("/habitos");
-                     
+
         })
         promise.catch((error) => {
             console.log(error)
@@ -47,9 +50,10 @@ export default function TelaInicial() {
         <Container>
             <img src={Logo} alt='Logo TrackIT' />
             <form onSubmit={handleSubmit}>
-                <input placeholder='Email' type='email' onChange={(e) => setEmail(e.target.value)} disabled={loading}/>
-                <input placeholder='Senha' type='password' onChange={(e) => setSenha(e.target.value)} disabled={loading}/>
-                <button disabled={loading}>Entrar</button>
+                <input placeholder='Email' type='email' onChange={(e) => setEmail(e.target.value)} disabled={loading} />
+                <input placeholder='Senha' type='password' onChange={(e) => setSenha(e.target.value)} disabled={loading} />
+                <button disabled={loading}>{loading ? <Bars color="#FFFFFF" height={24} width={24} />
+                    : 'Entrar'}</button>
             </form>
 
             <Link to="/cadastro">
@@ -98,6 +102,9 @@ const Container = styled.div`
         border: thin solid #52B6FF;
         color: white;
         margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
 
         margin-left: 10%;
 
