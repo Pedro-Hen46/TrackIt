@@ -1,21 +1,37 @@
-import { Header } from "../Header";
 import styled from "styled-components";
+import axios from "axios";
+
+import { Header } from "../Header";
 import { Footer } from "../Footer";
 import { ButtonDay } from "../ButtonDay";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useUserLogged } from "../../context/UserLoggedProvider";
+import Habit from "./Habit";
 
 export default function TelaHabitos() {
-  const [days, setDays] = useState([
-    { id: 1, day: "D", active: false },
-    { id: 2, day: "S", active: false },
-    { id: 3, day: "T", active: false },
-    { id: 4, day: "Q", active: false },
-    { id: 5, day: "Q", active: false },
-    { id: 6, day: "S", active: false },
-    { id: 7, day: "S", active: false },
-  ]);
-  const [addHabit, setAddHabit] = useState(false);
+  const { saveDataUser } = useUserLogged();
 
+  const config = {
+    headers: {
+      Authorization: `Bearer ${saveDataUser.token}`,
+    },
+  };
+
+  const [days, setDays] = useState([
+    { id: 0, day: "D", active: false },
+    { id: 1, day: "S", active: false },
+    { id: 2, day: "T", active: false },
+    { id: 3, day: "Q", active: false },
+    { id: 4, day: "Q", active: false },
+    { id: 5, day: "S", active: false },
+    { id: 6, day: "S", active: false },
+  ]);
+
+  const [addHabit, setAddHabit] = useState(false);
+  const [inputHabit, setInputHabit] = useState("");
+  const [responseHabits, setResponseHabits] = useState([]);
+
+  //PEGAR INFORMACAO DO BOTAO SENDO CLICADO
   function handleDayActive(dayID) {
     setDays((state) =>
       state.map((item) => {
@@ -26,6 +42,46 @@ export default function TelaHabitos() {
       })
     );
   }
+
+  //PEGANDO HABITOS QUE ESTAO NA API
+  useEffect(() => {
+    const promise = axios.get(
+      "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits",
+      config
+    );
+    promise.then((response) => setResponseHabits(response.data));
+  }, []);
+
+  //MANDANDO NOVOS HABITOS PARA A API
+  function sendHabitsToApi() {
+    const idDaysSelected = [];
+
+    days.map((day) => {
+      if (day.active === true) {
+        idDaysSelected.push(day.id);
+      }
+      return day;
+    });
+
+    const dataHabit = {
+      name: inputHabit,
+      days: idDaysSelected,
+    };
+
+    const promise = axios.post(
+      "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits",
+      dataHabit,
+      config
+    );
+
+    promise.then((response) => {
+      setAddHabit(false);
+      setResponseHabits([...responseHabits, response.data]);
+    });
+
+    promise.catch((error) => console.log(error));
+  }
+
 
   return (
     <Container>
@@ -38,7 +94,10 @@ export default function TelaHabitos() {
 
         {addHabit ? (
           <AddHabits>
-            <input placeholder="nome do hábito"></input>
+            <input
+              placeholder="nome do hábito"
+              onChange={(e) => setInputHabit(e.target.value)}
+            ></input>
             <div>
               {days.map((item, index) => (
                 <ButtonDay
@@ -50,17 +109,25 @@ export default function TelaHabitos() {
             </div>
             <Buttons>
               <h6 onClick={() => setAddHabit(false)}>Cancelar</h6>
-              <button>Salvar</button>
+              <button onClick={() => sendHabitsToApi()}>Salvar</button>
             </Buttons>
           </AddHabits>
         ) : (
           ""
         )}
 
-        <span>
-          Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para
-          começar a trackear!
-        </span>
+        {responseHabits.length === 0 ? (
+          <span>
+            Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para
+            começar a trackear!
+          </span>
+        ) : (
+          ""
+        )}
+
+        {responseHabits.map((habit, index) =>
+          <Habit habit={habit} key={index} id={habit.id}/>
+        )}
       </Contents>
       <Footer />
     </Container>

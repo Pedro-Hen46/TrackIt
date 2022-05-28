@@ -4,6 +4,9 @@ import TelaInicial from "./TelaInicial/TelaInicial";
 import TelaHabitos from "./TelaHabitos/TelaHabitos";
 
 import { UserLoggedProvider } from "../context/UserLoggedProvider";
+import { TelaHoje } from "./TelaHoje/TelaHoje";
+import { TelaHistorico } from "./TelaHistorico/TelaHistorico";
+
 
 export default function App() {
 
@@ -13,6 +16,8 @@ export default function App() {
                 <Routes>
                     <Route path="/" element={<TelaInicial />} />
                     <Route path="/cadastro" element={<TelaCadastro />} />
+                    <Route path="/hoje" element={<TelaHoje />} />
+                    <Route path="/historico" element={<TelaHistorico />} />
                     <Route path="/habitos" element={<TelaHabitos />} />
                 </Routes>
             </BrowserRouter>
