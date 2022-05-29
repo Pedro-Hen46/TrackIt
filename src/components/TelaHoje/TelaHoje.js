@@ -5,22 +5,23 @@ import "dayjs/locale/pt-br";
 import { Footer } from "../Footer";
 import { Header } from "../Header";
 import { useUserLogged } from "../../context/UserLoggedProvider";
+import { useUserProgress } from "../../context/UserProgressProvider";
 import { useEffect, useState } from "react";
 import { HabitToday } from "./HabitToday";
 import { ThreeDots } from "react-loader-spinner";
 
 export function TelaHoje() {
   const { saveDataUser } = useUserLogged();
-
-  const [responseToday, setResponseToday] = useState();
-
-  const config = {
-    headers: {
-      Authorization: `Bearer ${saveDataUser.token}`,
-    },
-  };
+  const { getPercentengeProgress } = useUserProgress();
+  const { progress } = useUserProgress();
+  const [responseToday, setResponseToday] = useState([]);
 
   useEffect(() => {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${saveDataUser.token}`,
+      },
+    };
     const promise = axios.get(
       "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today",
       config
@@ -31,22 +32,76 @@ export function TelaHoje() {
     promise.catch(() => {
       console.log("Deu FALHA meu nego");
     });
-  }, []);
+  }, [saveDataUser.token]);
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${saveDataUser.token}`,
+    },
+  };
+
+  useEffect(() => {
+    const habitsDone = responseToday.filter((state) => state.done);
+    getPercentengeProgress(responseToday.length, habitsDone.length);
+  }, [responseToday]);
+
+  function habitDone(id, data) {
+    setResponseToday((state) =>
+      state.map((habit) => {
+        if (habit.id === id) {
+          return { ...habit, done: !habit.done };
+        }
+        return habit;
+      })
+    );
+    if (data.done) {
+      const promise = axios.post(
+        `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}/uncheck`,
+        null,
+        config
+      );
+
+      promise.then((response) => {
+        console.log(response);
+      });
+      promise.catch((error) => {
+        console.log(error);
+      });
+    } else {
+      const promise = axios.post(
+        `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}/check`,
+        null,
+        config
+      );
+
+      promise.then((response) => {
+        console.log(response);
+      });
+      promise.catch((error) => {
+        console.log(error);
+      });
+    }
+  }
 
   return (
     <>
       <Header />
       <ContainerHoje>
         <h1>{dayjs().locale("pt-br").format("dddd DD/MM")}</h1>
-        <span>Nenhum hábito concluído ainda</span>
+        
+        {progress === 0 || isNaN(responseToday) === false ? (
+          <span>Nenhum hábito concluído ainda</span>
+        ) : (
+          <span>{progress}% dos hábitos concluídos</span>
+        )}
 
-        {responseToday === undefined ? (
+        {isNaN(responseToday) === false ? (
           <LoadingIcon>
             <ThreeDots color="darkgray" height={300} width={300} />
           </LoadingIcon>
         ) : (
           responseToday.map((habit, index) => (
-            <HabitToday data={habit} key={index} />
+            <HabitToday habitDone={habitDone} data={habit} key={index} />
           ))
         )}
       </ContainerHoje>

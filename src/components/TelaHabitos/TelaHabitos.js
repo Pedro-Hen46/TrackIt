@@ -82,9 +82,19 @@ export default function TelaHabitos() {
     promise.then((response) => {
       setAddHabit(false);
       setResponseHabits([...responseHabits, response.data]);
+      setDays((state) => state.map((day) => {
+        return {...day, active: false}
+      }));
     });
 
     promise.catch((error) => console.log(error));
+  }
+
+  function removeHabit(id){
+    
+    setResponseHabits((state) => state.filter((habit) =>{
+      return habit.id !== id 
+    })) 
   }
 
   return (
@@ -133,7 +143,7 @@ export default function TelaHabitos() {
         )}
 
         {responseHabits.map((habit, index) => (
-          <Habit habit={habit} key={index} id={habit.id} />
+          <Habit removeHabit={removeHabit} habit={habit} key={index} id={habit.id} />
         ))}
       </Contents>
       <Footer />

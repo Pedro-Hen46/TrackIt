@@ -1,27 +1,55 @@
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
+import { useUserProgress } from "../context/UserProgressProvider";
+
+import 'react-circular-progressbar/dist/styles.css';
 
 export function Footer() {
+  const { progress } = useUserProgress();
   const navigate = useNavigate();
-  const percentage = 80;
+
   return (
     <FooterContainer>
       <h3 onClick={() => navigate("/habitos")}>Hábitos</h3>
 
       <Hoje onClick={() => navigate("/hoje")}>
-        <CircularProgressbar
-          value={percentage}
-          text="Hoje"
-          background
-          backgroundPadding={6}
-          styles={buildStyles({
-            backgroundColor: "#3e98c7",
-            textColor: "#fff",
-            pathColor: "#fff",
-            trailColor: "transparent",
-          })}
-        />
+      <CircularProgressbar
+        value={progress}
+        text="Hoje"
+        background
+        backgroundPadding={6}
+        styles={{
+          text: {
+            fontFamily: "Lexend Deca",
+            fill: "#FFFFFF",
+          },
+          background: {
+            fill: '#3e98c7',
+          },
+          trail: {
+            // Trail color
+            stroke: '#3e98c7',
+            // Whether to use rounded or flat corners on the ends - can use 'butt' or 'round'
+            strokeLinecap: 'butt',
+            // Rotate the trail
+            transform: 'rotate(0.25turn)',
+            transformOrigin: 'center center',
+          },
+          path: {
+            // Path color
+            stroke: `#ffffff`,
+            // Whether to use rounded or flat corners on the ends - can use 'butt' or 'round'
+            strokeLinecap: 'butt',
+            // Customize transition animation
+            transition: 'stroke-dashoffset 0.5s ease 0s',
+            // Rotate the path
+            transform: 'rotate(0.0turn)',
+            transformOrigin: 'center center',
+          },
+          
+        }}
+      />
       </Hoje>
 
       <h3 onClick={() => navigate("/historico")}>Histórico</h3>

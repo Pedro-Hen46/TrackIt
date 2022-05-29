@@ -6,7 +6,7 @@ import { useUserLogged } from "../../context/UserLoggedProvider";
 import { ThreeDots } from "react-loader-spinner";
 import axios from "axios";
 
-export default function Habit({ habit, id }) {
+export default function Habit({ habit, id, removeHabit }) {
   const [days, setDays] = useState([
     { id: 0, day: "D", active: false },
     { id: 1, day: "S", active: false },
@@ -27,24 +27,26 @@ export default function Habit({ habit, id }) {
   };
 
   function DeleteHabitFromAPI() {
-    const decision = window.confirm("Tem certeza que deseja excluir este Habito?");
-    if (decision){
-    const promise = axios.delete(
-      `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}`,
-      config
+    const decision = window.confirm(
+      "Tem certeza que deseja excluir este Habito?"
     );
-    setLoading(true);
-    promise.then(() => {
-      console.log("habito excluido da api");
-    });
+    if (decision) {
+      const promise = axios.delete(
+        `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}`,
+        config
+      );
+      setLoading(true);
+      promise.then(() => {
+        removeHabit(id);
+        console.log("habito excluido da api");
+      });
 
-    promise.catch((error) => {
-      console.log("estou com o problema: ", error);
-    });
+      promise.catch((error) => {
+        console.log("estou com o problema: ", error);
+      });
 
-    promise.finally(() => setLoading(false));
-  }
-  console.log("Nao vou apagar meu brother")
+      promise.finally(() => setLoading(false));
+    }
   }
 
   return (
