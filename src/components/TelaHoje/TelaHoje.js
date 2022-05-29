@@ -14,6 +14,8 @@ export function TelaHoje() {
   const { saveDataUser } = useUserLogged();
   const { getPercentengeProgress } = useUserProgress();
   const { progress } = useUserProgress();
+
+  const [nullArrayAPI, setNullArrayAPI] = useState(false);
   const [responseToday, setResponseToday] = useState([]);
 
   useEffect(() => {
@@ -27,7 +29,14 @@ export function TelaHoje() {
       config
     );
 
-    promise.then((response) => setResponseToday(response.data));
+    promise.then((response) => {
+      //Verificando se a api esta retornando um array vazio, ou seja, sem tarefas para hoje...
+      if (response.data.length === 0){
+        setNullArrayAPI(true);
+      } else { 
+        setResponseToday(response.data);
+      }
+    });
 
     promise.catch(() => {
       console.log("Deu FALHA meu nego");
@@ -75,19 +84,22 @@ export function TelaHoje() {
       );
 
       promise.then((response) => {
-        console.log("dei o check no brabo: ",data);
+        console.log("dei o check no brabo: ", data);
       });
       promise.catch((error) => {
         console.log(error);
       });
     }
   }
-
   return (
     <>
       <Header />
       <ContainerHoje>
         <h1>{dayjs().locale("pt-br").format("dddd DD/MM")}</h1>
+
+        {nullArrayAPI ? <h2>Você não tem nenhum hábito para hoje, que tal comecarmos a trackear os seus hábitos juntos? Vá ao menu inferior e adicione um novo hábito para hoje!</h2> : ""}
+
+
 
         {isNaN(responseToday) === false || progress === 0 ? (
           progress === 0 ? (
@@ -104,8 +116,9 @@ export function TelaHoje() {
             <h6>{progress}% dos hábitos concluídos</h6>
           </ColorText>
         )}
-  
+
         {isNaN(responseToday) === false ? (
+          nullArrayAPI ? " " :
           <LoadingIcon>
             <ThreeDots color="darkgray" height={300} width={300} />
           </LoadingIcon>
@@ -134,14 +147,20 @@ const LoadingIcon = styled.div`
 `;
 
 const ContainerHoje = styled.div`
-  
   height: 200vh;
   background-color: #e5e5e5;
   width: 100%;
-  height: auto;
+  min-height: fit-content;
   margin-bottom: 70px;
   padding: 2rem;
   margin-top: 80px;
+
+  h2{
+    font-family: 'Lexend Deca';
+    font-weight: 200;
+    font-size: 20px;
+    color: #666666;
+  }
 
   h1 {
     font-family: "Lexend Deca";

@@ -273,13 +273,12 @@ const AddHabits = styled.div`
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  height: auto;
+  min-height: 100vh;
 
   background-color: #e5e5e5;
 `;
 
 const Contents = styled.div`
-  width: 100%;
   margin-top: 80px;
   margin-bottom: 70px;
   padding: 30px;
