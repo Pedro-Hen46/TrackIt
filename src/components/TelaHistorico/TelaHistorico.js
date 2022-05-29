@@ -1,10 +1,13 @@
+import axios from "axios";
 import styled from "styled-components";
-
 import { Footer } from "../Footer";
 import { Header } from "../Header";
 
 
 export function TelaHistorico() {
+  
+  
+  
   return (
     <>
       <Header />

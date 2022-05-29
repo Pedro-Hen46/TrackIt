@@ -10,19 +10,23 @@ export function HabitToday({ data, habitDone }) {
           <h6>Seu recorde: {data.highestSequence} dias</h6>
         </Legenda>
         <Icon done={data.done}>
-          <ion-icon onClick={() => habitDone(data.id, data)}  name="checkbox"></ion-icon>
+          <ion-icon
+            onClick={() => habitDone(data.id, data)}
+            name="checkbox"
+          ></ion-icon>
         </Icon>
       </Container>
     </Habit>
   );
 }
+
 const Icon = styled.div`
   font-size: 80px;
 
   ion-icon {
-    color: ${props => props.done ? "#8FC549" : "#E7E7E7" };
+    color: ${(props) => (props.done ? "#8FC549" : "#E7E7E7")};
 
-    :hover{
+    :hover {
       cursor: pointer;
     }
   }
@@ -63,6 +67,8 @@ const Habit = styled.div`
   background-color: white;
   border-radius: 10px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+
+  
 
   h1 {
     font-family: "Lexend Deca";

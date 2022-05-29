@@ -30,6 +30,7 @@ export default function TelaHabitos() {
 
   const [addHabit, setAddHabit] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [loadingButton, setLoadingButton] = useState(false);
   const [inputHabit, setInputHabit] = useState("");
   const [responseHabits, setResponseHabits] = useState([]);
 
@@ -60,13 +61,24 @@ export default function TelaHabitos() {
   //MANDANDO NOVOS HABITOS PARA A API
   function sendHabitsToApi() {
     const idDaysSelected = [];
-
     days.map((day) => {
       if (day.active === true) {
         idDaysSelected.push(day.id);
       }
       return day;
     });
+
+    //Dando mensagem de erro para o usuario colocar os dados corretos.
+    if (inputHabit === "") {
+      alert("Por favor entre com a descrição do seu hábito");
+      return;
+    }
+    if (idDaysSelected.length === 0) {
+      alert(
+        "Por favor entre com pelos menos 1 dia para o seu Hábito ser válido"
+      );
+      return;
+    }
 
     const dataHabit = {
       name: inputHabit,
@@ -79,22 +91,29 @@ export default function TelaHabitos() {
       config
     );
 
+    setLoadingButton(true);
+
     promise.then((response) => {
-      setAddHabit(false);
+      setLoadingButton(false);
+      setInputHabit("");
+      setAddHabit(false);      
       setResponseHabits([...responseHabits, response.data]);
-      setDays((state) => state.map((day) => {
-        return {...day, active: false}
-      }));
+      setDays((state) =>
+        state.map((day) => {
+          return { ...day, active: false };
+        })
+      );
     });
 
     promise.catch((error) => console.log(error));
   }
 
-  function removeHabit(id){
-    
-    setResponseHabits((state) => state.filter((habit) =>{
-      return habit.id !== id 
-    })) 
+  function removeHabit(id) {
+    setResponseHabits((state) =>
+      state.filter((habit) => {
+        return habit.id !== id;
+      })
+    );
   }
 
   return (
@@ -111,19 +130,30 @@ export default function TelaHabitos() {
             <input
               placeholder="nome do hábito"
               onChange={(e) => setInputHabit(e.target.value)}
+              disabled={loadingButton}
             ></input>
             <div>
-              {days.map((item, index) => (
-                <ButtonDay
-                  handleDayActive={handleDayActive}
-                  key={index}
-                  data={item}
-                />
-              ))}
+              {days.map((item, index) =>
+                loadingButton ? 
+                <ThreeDots color="#52b6ff" height={30} width={30} />
+                 : (
+                  <ButtonDay
+                    handleDayActive={handleDayActive}
+                    key={index}
+                    data={item}
+                  />
+                )
+              )}
             </div>
             <Buttons>
               <h6 onClick={() => setAddHabit(false)}>Cancelar</h6>
-              <button onClick={() => sendHabitsToApi()}>Salvar</button>
+              <button onClick={() => sendHabitsToApi()}>
+                {loadingButton ? (
+                  <ThreeDots color="white" height={30} width={30} />
+                ) : (
+                  "Salvar"
+                )}
+              </button>
             </Buttons>
           </AddHabits>
         ) : (
@@ -143,7 +173,12 @@ export default function TelaHabitos() {
         )}
 
         {responseHabits.map((habit, index) => (
-          <Habit removeHabit={removeHabit} habit={habit} key={index} id={habit.id} />
+          <Habit
+            removeHabit={removeHabit}
+            habit={habit}
+            key={index}
+            id={habit.id}
+          />
         ))}
       </Contents>
       <Footer />
@@ -242,8 +277,9 @@ const Container = styled.div`
 
 const Contents = styled.div`
   width: 100%;
-  height: 92vh;
+  height: 100%;
   margin-top: 80px;
+  margin-bottom: 70px;
   padding: 30px;
   background-color: #e5e5e5;
 

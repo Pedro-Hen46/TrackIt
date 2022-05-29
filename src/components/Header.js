@@ -20,6 +20,7 @@ const HeaderContainer = styled.div`
     height: 80px;
 
     position: fixed;
+    z-index: 1;
     padding: 30px;
     top: 0;
     left: 0;

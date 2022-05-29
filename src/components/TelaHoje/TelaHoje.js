@@ -62,7 +62,7 @@ export function TelaHoje() {
       );
 
       promise.then((response) => {
-        console.log(response);
+        console.log(data);
       });
       promise.catch((error) => {
         console.log(error);
@@ -75,7 +75,7 @@ export function TelaHoje() {
       );
 
       promise.then((response) => {
-        console.log(response);
+        console.log("dei o check no brabo: ",data);
       });
       promise.catch((error) => {
         console.log(error);
@@ -88,13 +88,23 @@ export function TelaHoje() {
       <Header />
       <ContainerHoje>
         <h1>{dayjs().locale("pt-br").format("dddd DD/MM")}</h1>
-        
-        {progress === 0 || isNaN(responseToday) === false ? (
-          <span>Nenhum hábito concluído ainda</span>
-        ) : (
-          <span>{progress}% dos hábitos concluídos</span>
-        )}
 
+        {isNaN(responseToday) === false || progress === 0 ? (
+          progress === 0 ? (
+            <span>Nenhum hábito concluído ainda</span>
+          ) : (
+            ""
+          )
+        ) : progress === 100 ? (
+          <ColorText>
+            <h6>Parabéns vc terminou {progress}% dos hábitos de hoje 🎉 </h6>
+          </ColorText>
+        ) : (
+          <ColorText>
+            <h6>{progress}% dos hábitos concluídos</h6>
+          </ColorText>
+        )}
+  
         {isNaN(responseToday) === false ? (
           <LoadingIcon>
             <ThreeDots color="darkgray" height={300} width={300} />
@@ -109,12 +119,23 @@ export function TelaHoje() {
     </>
   );
 }
+const ColorText = styled.div`
+  h6 {
+    font-weight: 400;
+    font-size: 16px;
+    font-family: "Lexend Deca";
+    color: #8fc549;
+  }
+`;
+
 const LoadingIcon = styled.div`
   display: flex;
   justify-content: center;
 `;
 
 const ContainerHoje = styled.div`
+  
+  height: 200vh;
   background-color: #e5e5e5;
   width: 100%;
   height: 100vh;
