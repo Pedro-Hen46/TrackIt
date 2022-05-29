@@ -138,7 +138,8 @@ const ContainerHoje = styled.div`
   height: 200vh;
   background-color: #e5e5e5;
   width: 100%;
-  height: 100vh;
+  height: auto;
+  margin-bottom: 70px;
   padding: 2rem;
   margin-top: 80px;
 
