@@ -11,19 +11,24 @@ import { HabitToday } from "./HabitToday";
 import { ThreeDots } from "react-loader-spinner";
 
 export function TelaHoje() {
+
   const { saveDataUser } = useUserLogged();
   const { getPercentengeProgress } = useUserProgress();
   const { progress } = useUserProgress();
 
   const [nullArrayAPI, setNullArrayAPI] = useState(false);
   const [responseToday, setResponseToday] = useState([]);
+  const [currentSeq, setCurrentSeq] = useState(0);
+ 
 
+  
   useEffect(() => {
     const config = {
       headers: {
         Authorization: `Bearer ${saveDataUser.token}`,
       },
     };
+    
     const promise = axios.get(
       "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today",
       config
@@ -38,10 +43,11 @@ export function TelaHoje() {
       }
     });
 
-    promise.catch(() => {
-      console.log("Deu FALHA meu nego");
+    promise.catch((error) => {
+      console.log("Deu FALHA meu nego ", error);
     });
-  }, [saveDataUser.token]);
+
+  }, [saveDataUser.token, currentSeq]);
 
   const config = {
     headers: {
@@ -71,7 +77,7 @@ export function TelaHoje() {
       );
 
       promise.then((response) => {
-        console.log(data);
+        setCurrentSeq(currentSeq+1)
       });
       promise.catch((error) => {
         console.log(error);
@@ -84,13 +90,15 @@ export function TelaHoje() {
       );
 
       promise.then((response) => {
-        console.log("dei o check no brabo: ", data);
+        setCurrentSeq(currentSeq+1)
       });
       promise.catch((error) => {
         console.log(error);
       });
     }
   }
+
+
   return (
     <>
       <Header />

@@ -8,7 +8,7 @@ export function Header() {
     return (
         <HeaderContainer>
             <h1>TrackIt</h1>
-            <img src={saveDataUser.image} />
+            <img src={saveDataUser.image} alt="Logo do perfil do usuario"/>
         </HeaderContainer>
     )
 }

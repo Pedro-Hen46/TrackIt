@@ -1,12 +1,14 @@
+import { useState } from "react";
 import styled from "styled-components";
 
 export function HabitToday({ data, habitDone }) {
+ 
   return (
     <Habit>
       <Container>
         <Legenda>
           <h4>{data.name}</h4>
-          <h6>Sequencia atual: {data.currentSequence} dias</h6>
+          <h6>Sequencia atual: {data.currentSequence} dias </h6>
           <h6>Seu recorde: {data.highestSequence} dias</h6>
         </Legenda>
         <Icon done={data.done}>
@@ -19,6 +21,7 @@ export function HabitToday({ data, habitDone }) {
     </Habit>
   );
 }
+
 
 const Icon = styled.div`
   font-size: 80px;
@@ -35,7 +38,9 @@ const Icon = styled.div`
 const Legenda = styled.div`
   display: flex;
   flex-direction: column;
-
+  span{
+    color: #8FC549;
+  }
   h6 {
     font-weight: 300;
     font-family: "Lexend Deca";

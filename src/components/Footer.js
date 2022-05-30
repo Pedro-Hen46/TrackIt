@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
+import { CircularProgressbar } from "react-circular-progressbar";
 import { useUserProgress } from "../context/UserProgressProvider";
 
 import 'react-circular-progressbar/dist/styles.css';
