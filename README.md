@@ -33,7 +33,7 @@ Algumas tecnologias usadas:
 </div><br />
 
 
-### 4 - Cumpra as suas metas e sejá uma pessoa extremamente produtiva. ❤
+### 4 - Cumpra as suas metas e seja uma pessoa extremamente produtiva. ❤
 <div>
         <img src="./public/images/CheckHabit.gif" width="300px" height="auto">
         <img src="./public/images/CompletedTasks.png" width="300px" height="auto">
